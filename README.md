@@ -13,12 +13,17 @@ dashboard**.
   Daily Doubles, image clues, and a wager-based Final round. Games are public
   or unlisted; anyone can clone a public board. Edit access is an edit-token
   link saved in your browser ("My games").
-- **Live rooms** — host any game with a 4-letter code. Three surfaces:
-  - **Board** (`/board/CODE`) — project it: animated money grid, clue reveals,
-    buzz lock-in banners, Daily Double splash, Final reveals, podium +
-    confetti, synthesized sound effects.
-  - **Host dashboard** (`/host/CODE`) — sees the answers, arms buzzers, judges
-    ✓/✗, manages teams/scores/control, runs the Final round console.
+- **Live rooms** — host any game with a 4-letter code (and a lobby **QR
+  code** for instant joining in the room). Three surfaces:
+  - **Board** (`/board/CODE`) — the main stage, built for in-person play:
+    project or screen-share it, and when you're the host it's also the
+    **presenter view** — click tiles, arm buzzers, judge ✓/✗ and run rounds
+    right on the shared screen. Animated money grid, buzz lock-in banners,
+    Daily Double splash, Final reveals, podium + confetti, synthesized
+    sound effects.
+  - **Host dashboard** (`/host/CODE`) — the companion console: sees the
+    answers privately, manages teams/scores/control/kicks, and can run the
+    full game too.
   - **Player phone** (`/play/CODE`) — name + emoji avatar, giant buzzer with
     haptics, team picker, wager pad, Final answer input, live leaderboard.
 - **Real buzzer fairness** — buzzes are ordered server-side; wrong answers

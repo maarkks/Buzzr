@@ -91,8 +91,8 @@ export default function Home() {
       {/* How it works */}
       <div className="mt-16 grid w-full max-w-3xl gap-4 text-center text-sm text-white/50 md:grid-cols-3">
         <div><span className="font-black text-gold">1.</span> Build or pick a board</div>
-        <div><span className="font-black text-gold">2.</span> Host live — share the 4-letter code</div>
-        <div><span className="font-black text-gold">3.</span> Players buzz from their phones</div>
+        <div><span className="font-black text-gold">2.</span> Put it on the big screen — players scan the QR</div>
+        <div><span className="font-black text-gold">3.</span> Phones become buzzers — scores keep themselves</div>
       </div>
 
       <div className="mt-auto pt-16 text-xs text-white/30">

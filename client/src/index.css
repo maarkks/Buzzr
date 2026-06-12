@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-stage: #0a0a1f;
-  --color-stage-2: #101032;
-  --color-cell: #1517a8;
-  --color-cell-2: #0d0f7a;
-  --color-gold: #f5c518;
-  --color-gold-2: #ffdf6b;
+  --color-stage: #181238;
+  --color-stage-2: #241a55;
+  --color-cell: #3b46ff;
+  --color-cell-2: #2118d8;
+  --color-grape: #8b5cf6;
+  --color-grape-2: #5b21b6;
+  --color-gold: #ffc91f;
+  --color-gold-2: #ffe066;
   --font-display: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
   --font-money: Impact, "Haettenschweiler", "Arial Narrow Bold", sans-serif;
 }
@@ -16,8 +18,13 @@ html, body, #root {
 }
 
 body {
-  background: radial-gradient(1200px 800px at 70% -10%, #1b1b4d 0%, var(--color-stage) 55%) fixed;
-  color: #ecedf8;
+  background:
+    radial-gradient(900px 600px at 85% -5%, rgba(217, 70, 239, 0.32) 0%, transparent 60%),
+    radial-gradient(1000px 700px at -10% 20%, rgba(59, 70, 255, 0.38) 0%, transparent 55%),
+    radial-gradient(800px 700px at 50% 115%, rgba(139, 92, 246, 0.35) 0%, transparent 60%),
+    linear-gradient(180deg, #1b1342 0%, var(--color-stage) 100%);
+  background-attachment: fixed;
+  color: #f3f2ff;
   font-family: var(--font-display);
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
@@ -29,22 +36,22 @@ body {
   font-family: var(--font-money);
   letter-spacing: 0.02em;
   color: var(--color-gold);
-  text-shadow: 0 2px 0 rgba(0,0,0,.55), 0 0 24px rgba(245,197,24,.25);
+  text-shadow: 0 2px 0 rgba(0,0,0,.55), 0 0 24px rgba(255,201,31,.35);
 }
 
 .board-cell {
   background: linear-gradient(160deg, var(--color-cell) 0%, var(--color-cell-2) 100%);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), 0 4px 14px rgba(0,0,0,.45);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), inset 0 0 0 1px rgba(255,255,255,.1), 0 4px 16px rgba(20, 10, 80, .5);
 }
 
 .board-cell-used {
-  background: linear-gradient(160deg, #14143a 0%, #0e0e2c 100%);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+  background: linear-gradient(160deg, #251d56 0%, #1b1542 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
 }
 
 .cat-cell {
-  background: linear-gradient(160deg, #232480 0%, #15165e 100%);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 4px 14px rgba(0,0,0,.45);
+  background: linear-gradient(160deg, var(--color-grape) 0%, var(--color-grape-2) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.3), inset 0 0 0 1px rgba(255,255,255,.1), 0 4px 16px rgba(40, 10, 90, .5);
 }
 
 /* ── Animations ─────────────────────────────────────────────────────────── */
@@ -135,4 +142,11 @@ body {
 .btn-green { @apply bg-emerald-500 text-black hover:bg-emerald-400; }
 .btn-red { @apply bg-rose-600 text-white hover:bg-rose-500; }
 
-.card { @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur; }
+.card { @apply rounded-2xl border border-white/15 bg-white/[.07] backdrop-blur; }
+
+/* Clue full-screen backdrop — vivid stage blue with a spotlight */
+.clue-stage {
+  background:
+    radial-gradient(1000px 600px at 50% 0%, rgba(255,255,255,.14) 0%, transparent 55%),
+    linear-gradient(160deg, var(--color-cell) 0%, var(--color-cell-2) 100%);
+}

@@ -26,7 +26,7 @@ export default function HostSetup() {
     try {
       const { code, hostToken } = await api.createRoom(gameId, settings);
       rememberHostToken(code, hostToken);
-      nav(`/host/${code}`);
+      nav(`/board/${code}`);
     } finally {
       setBusy(false);
     }
@@ -91,7 +91,9 @@ export default function HostSetup() {
         {busy ? 'Creating room…' : 'Create room ▸'}
       </button>
       <p className="mt-3 text-center text-xs text-white/40">
-        You'll get a host dashboard plus a separate big-screen board view to project or share.
+        You'll land on the big-screen board — share or project it, players scan the QR code to join,
+        and you run the whole game right from that screen. A separate dashboard is one click away for
+        roster &amp; score management.
       </p>
     </div>
   );

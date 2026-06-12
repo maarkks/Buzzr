@@ -1,45 +1,224 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fmtScore, type RoomSnapshot } from '@buzzr/shared';
-import { useRoom } from '../lib/socket';
+import QRCode from 'qrcode';
+import { fmtScore, type HostSecrets, type RoomSnapshot } from '@buzzr/shared';
+import { getHostToken } from '../lib/api';
+import { useRoom, type RoomConn } from '../lib/socket';
 import { AvatarBubble, Confetti, ErrorScreen, FlashBanner, Logo, Spinner, TimerRing } from '../components/ui';
 
+/**
+ * The big-screen surface. For the audience it's a passive display; when this
+ * browser holds the room's host key it becomes the *presenter* view — the
+ * host runs the whole game by clicking directly on the shared screen.
+ */
 export default function Board() {
   const { code = '' } = useParams();
-  const conn = useRoom(code, 'board', { sounds: true });
+  const hostToken = useMemo(() => getHostToken(code), [code]);
+  const conn = useRoom(code, hostToken ? 'host' : 'board', { hostToken: hostToken ?? undefined, sounds: true });
 
   if (conn.closedReason) return <ErrorScreen title="Room closed" message={conn.closedReason} />;
   if (conn.error) return <ErrorScreen title="Room not found" message={conn.error} />;
   if (!conn.snap) return <Spinner label="Connecting to the board…" />;
 
   const snap = conn.snap;
+  const presenting = !!hostToken && !!conn.secrets;
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <FlashBanner flash={snap.flash} />
       <div className="min-h-0 flex-1">
         {snap.phase === 'lobby' && <LobbyScreen snap={snap} />}
-        {snap.phase === 'board' && <BoardScreen snap={snap} />}
+        {snap.phase === 'board' && (
+          <BoardScreen snap={snap} onSelect={presenting ? (ci, ri) => conn.emit('host:selectClue', ci, ri) : undefined} />
+        )}
         {snap.phase === 'clue' && <ClueScreen snap={snap} />}
         {snap.phase.startsWith('final') && <FinalScreen snap={snap} />}
         {snap.phase === 'ended' && <PodiumScreen snap={snap} />}
       </div>
+      {presenting && <PresenterBar snap={snap} secrets={conn.secrets!} conn={conn} />}
       {snap.phase !== 'lobby' && snap.phase !== 'ended' && <ScoreStrip snap={snap} />}
     </div>
   );
 }
 
-function LobbyScreen({ snap }: { snap: RoomSnapshot }) {
-  const joinHost = location.host;
+// ── Presenter bar (host-on-the-shared-screen controls) ───────────────────────
+
+function PresenterBar({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: HostSecrets; conn: RoomConn }) {
+  const [peek, setPeek] = useState(false);
+  const stage = snap.clueStage;
+  useEffect(() => setPeek(false), [snap.clue?.categoryIndex, snap.clue?.rowIndex, snap.phase]);
+
+  const allUsed = snap.used.every((c) => c.every(Boolean));
+  const answer = secrets.answer;
+
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-6 p-8">
+    <div className="z-30 flex shrink-0 flex-wrap items-center gap-2 border-t border-white/15 bg-black/50 px-3 py-2 backdrop-blur">
+      <span className="rounded bg-gold px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-black">Host</span>
+
+      {snap.phase === 'lobby' && (
+        <>
+          <span className="text-sm text-white/70">{snap.players.length} player{snap.players.length === 1 ? '' : 's'} in — start when ready</span>
+          <button className="btn btn-gold ml-auto" onClick={() => conn.emit('host:start')}>Start game ▸</button>
+        </>
+      )}
+
+      {snap.phase === 'board' && (
+        <>
+          <span className="text-sm text-white/70">Click a tile to open it{snap.controlName ? ` — ${snap.controlName} has control` : ''}</span>
+          <span className="ml-auto flex gap-2">
+            {snap.roundIndex + 1 < snap.roundCount && (
+              <button className={`btn ${allUsed ? 'btn-gold' : 'btn-ghost'}`} onClick={() => conn.emit('host:nextRound')}>Next round ▸</button>
+            )}
+            {snap.hasFinal && (
+              <button
+                className={`btn ${allUsed && snap.roundIndex + 1 >= snap.roundCount ? 'btn-gold' : 'btn-ghost'}`}
+                onClick={() => conn.emit('host:startFinal')}
+              >
+                Final round ▸
+              </button>
+            )}
+          </span>
+        </>
+      )}
+
+      {snap.phase === 'clue' && (
+        <>
+          {stage === 'reading' && (
+            <button className="btn btn-gold anim-armed" onClick={() => conn.emit('host:arm')}>🔔 Arm buzzers</button>
+          )}
+          {stage === 'armed' && <span className="font-black text-gold">Buzzers LIVE…</span>}
+          {(stage === 'buzzed' || stage === 'dd-answer') && (
+            <>
+              <button className="btn btn-green px-6" onClick={() => conn.emit('host:judge', true)}>✓ Correct</button>
+              <button className="btn btn-red px-6" onClick={() => conn.emit('host:judge', false)}>✗ Wrong</button>
+            </>
+          )}
+          {stage === 'wager' && <DDWagerControls snap={snap} conn={conn} />}
+          {stage === 'resolved' ? (
+            <button className="btn btn-gold" onClick={() => conn.emit('host:close')}>Back to board ▸</button>
+          ) : (
+            stage !== 'wager' && (
+              <button className="btn btn-ghost" onClick={() => conn.emit('host:reveal')}>Reveal answer</button>
+            )
+          )}
+          <span className="ml-auto flex items-center gap-2">
+            {stage !== 'resolved' && answer && (
+              <button
+                className="btn btn-ghost"
+                onClick={() => setPeek((p) => !p)}
+                title="Peek at the correct response (visible on the shared screen!)"
+              >
+                {peek ? '🙈 Hide' : '👁 Peek'}
+              </button>
+            )}
+            {peek && stage !== 'resolved' && <span className="max-w-72 truncate text-sm font-bold text-gold">{answer}</span>}
+          </span>
+        </>
+      )}
+
+      {snap.phase === 'final-wager' && (
+        <>
+          <span className="text-sm text-white/70">Wagers in: {snap.final?.wagersIn}/{snap.final?.wagersExpected}</span>
+          <button className="btn btn-gold ml-auto" onClick={() => conn.emit('host:finalShowClue')}>Lock wagers & show clue ▸</button>
+        </>
+      )}
+
+      {snap.phase === 'final-answer' && (
+        <>
+          <span className="text-sm text-white/70">Answers in: {snap.final?.answersIn}/{snap.final?.wagersExpected}</span>
+          <button className="btn btn-gold ml-auto" onClick={() => conn.emit('host:finalCloseAnswers')}>Close answers</button>
+        </>
+      )}
+
+      {snap.phase === 'final-reveal' && <FinalRevealControls secrets={secrets} conn={conn} />}
+
+      {snap.phase !== 'clue' && (
+        <a href={`/host/${snap.code}`} target="_blank" rel="noreferrer" className="btn btn-ghost ml-2" title="Roster, scores and advanced controls">
+          ⚙ Dashboard
+        </a>
+      )}
+    </div>
+  );
+}
+
+function DDWagerControls({ snap, conn }: { snap: RoomSnapshot; conn: RoomConn }) {
+  const [wager, setWager] = useState('');
+  return (
+    <span className="flex items-center gap-2">
+      <span className="text-sm text-white/70">
+        {snap.clue?.ddOwnerName ? `${snap.clue.ddOwnerName} wagers on their phone — or set it here:` : 'Assign control from the dashboard, or set a wager:'}
+      </span>
+      <input
+        value={wager}
+        onChange={(e) => setWager(e.target.value.replace(/\D/g, ''))}
+        placeholder="$"
+        inputMode="numeric"
+        className="input w-24 py-1"
+      />
+      <button className="btn btn-ghost" disabled={!wager || !snap.clue?.ddOwnerId} onClick={() => conn.emit('host:setWager', Number(wager))}>
+        Set
+      </button>
+      <button className="btn btn-ghost" onClick={() => conn.emit('host:close')}>Cancel</button>
+    </span>
+  );
+}
+
+function FinalRevealControls({ secrets, conn }: { secrets: HostSecrets; conn: RoomConn }) {
+  const next = secrets.finalBoard.find((e) => !e.revealed);
+  const judging = secrets.finalBoard.find((e) => e.revealed && !e.judged);
+  const done = secrets.finalBoard.length > 0 && secrets.finalBoard.every((e) => e.judged);
+  return (
+    <span className="flex flex-1 flex-wrap items-center gap-2">
+      {judging ? (
+        <>
+          <span className="text-sm text-white/70">Judge <b className="text-gold">{judging.name}</b>:</span>
+          <button className="btn btn-green px-6" onClick={() => conn.emit('host:finalJudge', judging.entityId, true)}>✓</button>
+          <button className="btn btn-red px-6" onClick={() => conn.emit('host:finalJudge', judging.entityId, false)}>✗</button>
+        </>
+      ) : next ? (
+        <button className="btn btn-gold" onClick={() => conn.emit('host:finalReveal', next.entityId)}>
+          Reveal {next.name} ▸
+        </button>
+      ) : done ? (
+        <button className="btn btn-gold" onClick={() => conn.emit('host:endGame')}>Show the podium 🏆</button>
+      ) : null}
+    </span>
+  );
+}
+
+// ── Screens ───────────────────────────────────────────────────────────────────
+
+function QrCard({ url }: { url: string }) {
+  const [src, setSrc] = useState<string | null>(null);
+  useEffect(() => {
+    QRCode.toDataURL(url, { width: 480, margin: 1, color: { dark: '#181238', light: '#ffffff' } })
+      .then(setSrc)
+      .catch(() => setSrc(null));
+  }, [url]);
+  if (!src) return null;
+  return (
+    <div className="rounded-2xl bg-white p-3 shadow-[0_0_60px_rgba(255,201,31,.25)]">
+      <img src={src} alt={`QR code to join: ${url}`} className="h-44 w-44 md:h-52 md:w-52" />
+    </div>
+  );
+}
+
+function LobbyScreen({ snap }: { snap: RoomSnapshot }) {
+  const joinUrl = `${location.origin}/play/${snap.code}`;
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-6 p-6">
       <Logo size="lg" />
-      <div className="text-2xl text-white/70">{snap.gameTitle}</div>
-      <div className="card flex flex-col items-center gap-2 px-12 py-8">
-        <div className="text-sm font-bold uppercase tracking-widest text-white/50">Join on your phone</div>
-        <div className="text-xl text-white/80">
-          {joinHost}<span className="text-gold">/play</span>
+      <div className="text-2xl text-white/80">{snap.gameTitle}</div>
+      <div className="card flex flex-col items-center gap-6 px-10 py-7 md:flex-row md:gap-10">
+        <QrCard url={joinUrl} />
+        <div className="flex flex-col items-center">
+          <div className="text-sm font-bold uppercase tracking-widest text-white/60">Scan to join — or go to</div>
+          <div className="text-xl text-white/90">
+            {location.host}<span className="text-gold">/play</span>
+          </div>
+          <div className="money anim-marquee mt-2 text-7xl tracking-[.3em] md:text-8xl">{snap.code}</div>
+          <div className="mt-2 text-sm text-white/60">Your phone becomes your buzzer 🔔</div>
+          {snap.locked && <div className="mt-2 font-bold text-rose-400">🔒 Room locked</div>}
         </div>
-        <div className="money anim-marquee mt-2 text-8xl tracking-[.3em]">{snap.code}</div>
-        {snap.locked && <div className="mt-2 font-bold text-rose-400">🔒 Room locked</div>}
       </div>
       {snap.settings.mode === 'teams' ? (
         <div className="flex max-w-6xl flex-wrap justify-center gap-4">
@@ -61,7 +240,7 @@ function LobbyScreen({ snap }: { snap: RoomSnapshot }) {
           ))}
         </div>
       )}
-      <div className="text-white/40">{snap.players.length} player{snap.players.length === 1 ? '' : 's'} in</div>
+      <div className="text-white/50">{snap.players.length} player{snap.players.length === 1 ? '' : 's'} in</div>
     </div>
   );
 }
@@ -75,12 +254,12 @@ function PlayerChip({ name, avatar }: { name: string; avatar: { emoji: string; c
   );
 }
 
-function BoardScreen({ snap }: { snap: RoomSnapshot }) {
+function BoardScreen({ snap, onSelect }: { snap: RoomSnapshot; onSelect?: (ci: number, ri: number) => void }) {
   return (
     <div className="flex h-full flex-col gap-1.5 p-3">
       <div className="flex items-center justify-between px-1">
-        <div className="text-sm font-bold uppercase tracking-widest text-white/40">{snap.roundName}</div>
-        <div className="text-sm text-white/40">
+        <div className="text-sm font-bold uppercase tracking-widest text-white/50">{snap.roundName}</div>
+        <div className="text-sm text-white/50">
           Control: <b className="text-gold">{snap.controlName ?? '—'}</b>
         </div>
       </div>
@@ -99,14 +278,17 @@ function BoardScreen({ snap }: { snap: RoomSnapshot }) {
         {snap.values.map((v, ri) =>
           snap.categories.map((_, ci) => {
             const used = snap.used[ci]?.[ri];
+            const clickable = onSelect && !used;
             return (
-              <div
+              <button
                 key={`${ci}-${ri}`}
-                className={`${used ? 'board-cell-used' : 'board-cell'} anim-cell-in money flex items-center justify-center rounded-lg [font-size:clamp(18px,3.2vw,52px)]`}
+                disabled={!clickable}
+                onClick={() => clickable && onSelect(ci, ri)}
+                className={`${used ? 'board-cell-used' : 'board-cell'} anim-cell-in money flex items-center justify-center rounded-lg [font-size:clamp(18px,3.2vw,52px)] ${clickable ? 'cursor-pointer transition hover:brightness-125' : ''}`}
                 style={{ animationDelay: `${(ri * snap.categories.length + ci) * 0.03}s` }}
               >
                 {used ? '' : `$${v}`}
-              </div>
+              </button>
             );
           }),
         )}
@@ -122,7 +304,7 @@ function ClueScreen({ snap }: { snap: RoomSnapshot }) {
   // Daily double splash while wagering
   if (stage === 'wager') {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-6 bg-gradient-to-br from-cell to-cell-2">
+      <div className="clue-stage flex h-full flex-col items-center justify-center gap-6">
         <div className="anim-dd money text-center text-7xl md:text-9xl">DAILY<br />DOUBLE!</div>
         <div className="text-2xl text-white/80">
           <b className="text-gold">{clue.ddOwnerName ?? 'The team in control'}</b> is wagering…
@@ -133,7 +315,7 @@ function ClueScreen({ snap }: { snap: RoomSnapshot }) {
   }
 
   return (
-    <div className="anim-clue flex h-full flex-col bg-gradient-to-br from-cell to-cell-2 p-6">
+    <div className="anim-clue clue-stage flex h-full flex-col p-6">
       <div className="flex items-center justify-between">
         <div className="text-lg font-black uppercase tracking-widest text-white/70">
           {clue.category} — <span className="money text-2xl">${clue.isDailyDouble ? (clue.wager ?? clue.value).toLocaleString() : clue.value}</span>
@@ -185,7 +367,7 @@ function ClueScreen({ snap }: { snap: RoomSnapshot }) {
 function FinalScreen({ snap }: { snap: RoomSnapshot }) {
   const f = snap.final!;
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-8 bg-gradient-to-br from-cell to-cell-2 p-8">
+    <div className="clue-stage flex h-full flex-col items-center justify-center gap-8 p-8">
       <div className="money text-5xl md:text-6xl">FINAL ROUND</div>
       <div className="rounded-xl bg-black/30 px-10 py-4 text-3xl font-black uppercase tracking-widest">{f.category || '—'}</div>
 
@@ -283,9 +465,9 @@ function ScoreStrip({ snap }: { snap: RoomSnapshot }) {
         <div
           key={e.id}
           className="flex min-w-0 flex-1 flex-col items-center justify-center rounded-lg px-2 py-1.5"
-          style={{ background: `linear-gradient(160deg, ${e.color}33, ${e.color}11)`, boxShadow: `inset 0 -3px 0 ${e.color}` }}
+          style={{ background: `linear-gradient(160deg, ${e.color}55, ${e.color}1c)`, boxShadow: `inset 0 -3px 0 ${e.color}` }}
         >
-          <div className="w-full truncate text-center text-xs font-black uppercase tracking-wide text-white/80">
+          <div className="w-full truncate text-center text-xs font-black uppercase tracking-wide text-white/90">
             {e.control && <span className="mr-1 text-gold">●</span>}
             {e.name}
           </div>

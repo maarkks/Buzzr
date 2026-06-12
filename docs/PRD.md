@@ -106,8 +106,19 @@ generation, content moderation tooling, internationalization.
   and judge each submission in order.
 - **F4.5** End-game: podium ordering, play-again-style room teardown.
 
-### 3.5 Board (audience display)
+### 3.5 Board (audience display & presenter surface)
 
+The primary use case is **in person**: the host projects/shares this screen,
+players join from phones, and the host runs the game *directly on the shared
+screen*.
+
+- **F5.0** **Presenter mode:** when the board is opened by the room's host,
+  it becomes interactive — clickable tiles, a slim host control bar
+  (start/arm/judge/reveal/close, round & final controls, on-demand answer
+  peek), so a single shared screen is the whole show. The separate host
+  dashboard remains available for roster/score management.
+- **F5.0b** The lobby shows a large **QR code** alongside the room code so
+  players in the room join in seconds.
 - **F5.1** Full-screen category/value grid with game-show aesthetics; used
   clues empty out; clue opens with reveal animation and media support.
 - **F5.2** Buzz lock-in banner (avatar + name + team), countdown ring for buzz

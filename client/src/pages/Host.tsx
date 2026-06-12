@@ -49,8 +49,8 @@ function TopBar({ snap, conn }: { snap: RoomSnapshot; conn: RoomConn }) {
         <button className="btn btn-ghost" onClick={() => copy('join', joinUrl)}>
           {copied === 'join' ? '✓ Copied' : '📱 Copy join link'}
         </button>
-        <a href={boardUrl} target="_blank" rel="noreferrer" className="btn btn-ghost">
-          🖥️ Open board
+        <a href={boardUrl} target="_blank" rel="noreferrer" className="btn btn-ghost" title="The big-screen presenter view — run the game from there">
+          🖥️ Present
         </a>
         <button
           className={`btn ${snap.locked ? 'btn-red' : 'btn-ghost'}`}
