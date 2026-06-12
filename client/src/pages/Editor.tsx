@@ -167,7 +167,7 @@ export default function Editor() {
         )}
         {!readonly && game.rounds.length > 1 && tab === 1 && (
           <button
-            className="btn btn-ghost text-rose-400"
+            className="btn btn-ghost text-rose-500"
             onClick={() => {
               if (confirm('Remove the second round?')) {
                 update((g) => void g.rounds.splice(1, 1));
@@ -217,11 +217,11 @@ export default function Editor() {
 
 function SaveBadge({ state }: { state: string }) {
   const map: Record<string, [string, string]> = {
-    saved: ['Saved', 'text-emerald-400'],
-    saving: ['Saving…', 'text-white/50'],
-    dirty: ['Unsaved…', 'text-amber-400'],
-    error: ['Save failed!', 'text-rose-400'],
-    readonly: ['Read-only', 'text-white/40'],
+    saved: ['Saved', 'text-emerald-600'],
+    saving: ['Saving…', 'text-ink/50'],
+    dirty: ['Unsaved…', 'text-amber-600'],
+    error: ['Save failed!', 'text-rose-500'],
+    readonly: ['Read-only', 'text-ink/50'],
   };
   const [label, cls] = map[state] ?? ['', ''];
   return <span className={`text-sm font-bold ${cls}`}>{label}</span>;
@@ -258,7 +258,7 @@ function RoundEditor({
                 onChange={(e) => update((g) => (g.rounds[roundIndex].categories[ci].name = e.target.value))}
                 placeholder={`Category ${ci + 1}`}
                 rows={2}
-                className="w-full resize-none bg-transparent text-center text-sm font-black uppercase tracking-wide text-white outline-none placeholder:text-white/30"
+                className="w-full resize-none bg-transparent text-center text-sm font-black uppercase tracking-wide text-white outline-none placeholder:text-white/50"
               />
               {!readonly && cats > 1 && (
                 <button
@@ -323,7 +323,7 @@ function RoundEditor({
           >
             − Row
           </button>
-          <span className="self-center text-xs text-white/40">
+          <span className="self-center text-xs text-ink/50">
             Click a tile to edit its clue · 💰 marks Daily Doubles · values are editable on the left
           </span>
         </div>
@@ -356,7 +356,7 @@ function RowCells({
         value={v}
         disabled={readonly}
         onChange={(e) => update((g) => (g.rounds[roundIndex].values[ri] = Number(e.target.value)))}
-        className="money w-full rounded-lg border border-white/10 bg-white/5 px-1 py-2 text-center text-lg outline-none"
+        className="money w-full rounded-lg border border-ink/10 bg-ink/5 px-1 py-2 text-center text-lg outline-none"
       />
       {round.categories.map((c, ci) => {
         const clue = c.clues[ri];
@@ -369,7 +369,7 @@ function RowCells({
             className={`board-cell group relative min-h-16 cursor-pointer rounded-lg p-2 text-left transition hover:brightness-125 ${empty ? 'opacity-40' : ''}`}
           >
             <span className="money block text-center text-2xl">${v}</span>
-            <span className="mt-1 line-clamp-2 block text-center text-[10px] leading-tight text-white/60">
+            <span className="mt-1 line-clamp-2 block text-center text-[10px] leading-tight text-white/75">
               {empty ? 'empty' : clue.question}
             </span>
             {clue.dailyDouble && <span className="absolute left-1 top-1 text-xs">💰</span>}
@@ -414,10 +414,10 @@ function ClueModal({
   };
 
   return (
-    <div className="fixed inset-0 z-40 grid place-items-center bg-black/70 p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-40 grid place-items-center bg-ink/50 p-4" onClick={onClose}>
       <div className="card anim-pop w-full max-w-xl p-6" onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-center justify-between">
-          <div className="font-black uppercase tracking-wide text-white/70">
+          <div className="font-black uppercase tracking-wide text-ink/70">
             {cat.name || `Category ${cell.cat + 1}`} · <span className="money">${round.values[cell.row]}</span>
           </div>
           <div className="flex gap-2">
@@ -426,7 +426,7 @@ function ClueModal({
             <button className="btn btn-ghost px-3" onClick={onClose}>✕</button>
           </div>
         </div>
-        <label className="mb-1 block text-xs font-bold uppercase text-white/50">Clue (what players see)</label>
+        <label className="mb-1 block text-xs font-bold uppercase text-ink/50">Clue (what players see)</label>
         <textarea
           value={clue.question}
           disabled={readonly}
@@ -436,7 +436,7 @@ function ClueModal({
           className="input mb-4 resize-none text-base"
           placeholder="This 1969 mission landed the first humans on the Moon"
         />
-        <label className="mb-1 block text-xs font-bold uppercase text-white/50">Correct response</label>
+        <label className="mb-1 block text-xs font-bold uppercase text-ink/50">Correct response</label>
         <textarea
           value={clue.answer}
           disabled={readonly}
@@ -445,7 +445,7 @@ function ClueModal({
           className="input mb-4 resize-none text-base"
           placeholder="What is Apollo 11?"
         />
-        <label className="mb-1 block text-xs font-bold uppercase text-white/50">Image URL (optional)</label>
+        <label className="mb-1 block text-xs font-bold uppercase text-ink/50">Image URL (optional)</label>
         <input
           value={clue.image ?? ''}
           disabled={readonly}
@@ -460,10 +460,10 @@ function ClueModal({
             checked={!!clue.dailyDouble}
             disabled={readonly}
             onChange={(e) => set((c) => (c.dailyDouble = e.target.checked || undefined))}
-            className="h-5 w-5 accent-[#f5c518]"
+            className="h-5 w-5 accent-[#f59e0b]"
           />
           <span className="font-bold">💰 Daily Double</span>
-          <span className="text-xs text-white/40">— the team in control wagers before seeing the clue</span>
+          <span className="text-xs text-ink/50">— the team in control wagers before seeing the clue</span>
         </label>
       </div>
     </div>
@@ -483,7 +483,7 @@ function FinalEditor({
   if (!final) {
     return (
       <div className="card grid place-items-center p-12 text-center">
-        <p className="mb-4 max-w-md text-white/60">
+        <p className="mb-4 max-w-md text-ink/60">
           The Final round is the big finish: everyone wagers from their score, then answers on their phone before the timer runs out.
         </p>
         {!readonly && (
@@ -500,7 +500,7 @@ function FinalEditor({
   const set = (fn: (f: NonNullable<GameData['final']>) => void) => update((g) => g.final && fn(g.final));
   return (
     <div className="card max-w-2xl p-6">
-      <label className="mb-1 block text-xs font-bold uppercase text-white/50">Category (revealed first, for wagering)</label>
+      <label className="mb-1 block text-xs font-bold uppercase text-ink/50">Category (revealed first, for wagering)</label>
       <input
         value={final.category}
         disabled={readonly}
@@ -508,7 +508,7 @@ function FinalEditor({
         className="input mb-4 font-black uppercase"
         placeholder="WORLD CAPITALS"
       />
-      <label className="mb-1 block text-xs font-bold uppercase text-white/50">Final clue</label>
+      <label className="mb-1 block text-xs font-bold uppercase text-ink/50">Final clue</label>
       <textarea
         value={final.question}
         disabled={readonly}
@@ -516,7 +516,7 @@ function FinalEditor({
         rows={3}
         className="input mb-4 resize-none"
       />
-      <label className="mb-1 block text-xs font-bold uppercase text-white/50">Correct response</label>
+      <label className="mb-1 block text-xs font-bold uppercase text-ink/50">Correct response</label>
       <textarea
         value={final.answer}
         disabled={readonly}
@@ -526,7 +526,7 @@ function FinalEditor({
       />
       {!readonly && (
         <button
-          className="btn btn-ghost text-rose-400"
+          className="btn btn-ghost text-rose-500"
           onClick={() => confirm('Remove the Final round?') && update((g) => (g.final = null))}
         >
           Remove Final round

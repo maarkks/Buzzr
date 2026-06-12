@@ -119,6 +119,10 @@ screen*.
   dashboard remains available for roster/score management.
 - **F5.0b** The lobby shows a large **QR code** alongside the room code so
   players in the room join in seconds.
+- **F5.0c** **Pop-out display:** one click opens the clean audience display
+  in a separate window (`?display=1`) and turns the current window into the
+  host console (which always shows the answers). The host shares/projects the
+  pop-out and judges privately from their own screen — best of both worlds.
 - **F5.1** Full-screen category/value grid with game-show aesthetics; used
   clues empty out; clue opens with reveal animation and media support.
 - **F5.2** Buzz lock-in banner (avatar + name + team), countdown ring for buzz

@@ -24,6 +24,9 @@ dashboard**.
   - **Host dashboard** (`/host/CODE`) — the companion console: sees the
     answers privately, manages teams/scores/control/kicks, and can run the
     full game too.
+  - **Pop-out display** — one click pops the clean audience view into its own
+    window to share/project, while your window becomes the console with the
+    answers. Ideal for screen-sharing a single window in person or on a call.
   - **Player phone** (`/play/CODE`) — name + emoji avatar, giant buzzer with
     haptics, team picker, wager pad, Final answer input, live leaderboard.
 - **Real buzzer fairness** — buzzes are ordered server-side; wrong answers

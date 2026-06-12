@@ -40,29 +40,29 @@ export default function HostSetup() {
       </div>
 
       <h1 className="mb-1 text-3xl font-black">Host “{game.title}”</h1>
-      <p className="mb-8 text-white/60">
+      <p className="mb-8 text-ink/60">
         {game.rounds.length} round{game.rounds.length > 1 ? 's' : ''}
         {game.final ? ' + Final' : ''} · players join with a 4-letter code from their phones.
       </p>
 
       <div className="card mb-6 p-6">
-        <div className="mb-3 text-xs font-bold uppercase tracking-widest text-white/50">Game mode</div>
+        <div className="mb-3 text-xs font-bold uppercase tracking-widest text-ink/50">Game mode</div>
         <div className="mb-6 grid grid-cols-2 gap-3">
           <button
             onClick={() => set('mode', 'teams')}
-            className={`card cursor-pointer p-4 text-left transition ${settings.mode === 'teams' ? 'border-gold bg-gold/10' : 'hover:bg-white/10'}`}
+            className={`card cursor-pointer p-4 text-left transition ${settings.mode === 'teams' ? 'border-amber-400 bg-amber-100/70' : 'hover:bg-ink/10'}`}
           >
             <div className="text-2xl">👥</div>
             <div className="font-black">Teams</div>
-            <div className="text-xs text-white/60">Shared team scores · a wrong answer locks out the whole team</div>
+            <div className="text-xs text-ink/60">Shared team scores · a wrong answer locks out the whole team</div>
           </button>
           <button
             onClick={() => set('mode', 'ffa')}
-            className={`card cursor-pointer p-4 text-left transition ${settings.mode === 'ffa' ? 'border-gold bg-gold/10' : 'hover:bg-white/10'}`}
+            className={`card cursor-pointer p-4 text-left transition ${settings.mode === 'ffa' ? 'border-amber-400 bg-amber-100/70' : 'hover:bg-ink/10'}`}
           >
             <div className="text-2xl">⚡</div>
             <div className="font-black">Free-for-all</div>
-            <div className="text-xs text-white/60">Every player for themselves · individual scores and lockouts</div>
+            <div className="text-xs text-ink/60">Every player for themselves · individual scores and lockouts</div>
           </button>
         </div>
 
@@ -90,7 +90,7 @@ export default function HostSetup() {
       <button onClick={start} disabled={busy} className="btn btn-gold w-full py-4 text-xl">
         {busy ? 'Creating room…' : 'Create room ▸'}
       </button>
-      <p className="mt-3 text-center text-xs text-white/40">
+      <p className="mt-3 text-center text-xs text-ink/50">
         You'll land on the big-screen board — share or project it, players scan the QR code to join,
         and you run the whole game right from that screen. A separate dashboard is one click away for
         roster &amp; score management.
@@ -117,9 +117,9 @@ function ToggleRow({ label, hint, checked, onChange }: { label: string; hint: st
     <label className="mb-4 flex cursor-pointer items-center justify-between gap-4">
       <span>
         <span className="block text-sm font-bold">{label}</span>
-        <span className="block text-xs text-white/50">{hint}</span>
+        <span className="block text-xs text-ink/50">{hint}</span>
       </span>
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="h-6 w-6 accent-[#f5c518]" />
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="h-6 w-6 accent-[#f59e0b]" />
     </label>
   );
 }

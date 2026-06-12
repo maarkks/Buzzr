@@ -322,14 +322,14 @@ export const AVATAR_EMOJI = [
 ] as const;
 
 export const AVATAR_COLORS = [
-  '#f43f5e', '#f97316', '#f59e0b', '#84cc16',
-  '#10b981', '#06b6d4', '#3b82f6', '#8b5cf6',
-  '#d946ef', '#ec4899', '#14b8a6', '#eab308',
+  '#f9a8d4', '#fdba74', '#fcd34d', '#bef264',
+  '#6ee7b7', '#67e8f9', '#93c5fd', '#c4b5fd',
+  '#f0abfc', '#fda4af', '#5eead4', '#fde047',
 ] as const;
 
 export const TEAM_COLORS = [
-  '#3b82f6', '#f43f5e', '#10b981', '#f59e0b',
-  '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16',
+  '#7da2f7', '#f593ab', '#5fd6a4', '#f7bd59',
+  '#b39df5', '#67d3e0', '#f29ad5', '#a8d96a',
 ] as const;
 
 export const TEAM_DEFAULT_NAMES = [

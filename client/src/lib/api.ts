@@ -66,12 +66,19 @@ export function getEditToken(id: string): string | null {
   return getMyGames().find((g) => g.id === id)?.editToken ?? null;
 }
 
+// localStorage (not session) so the host key survives new tabs and pop-out
+// windows — any window this browser opens for the room can act as host.
 export function rememberHostToken(code: string, token: string) {
-  sessionStorage.setItem(`buzzr:host:${code}`, token);
+  localStorage.setItem(`buzzr:host:${code}`, token);
 }
 
 export function getHostToken(code: string): string | null {
-  return sessionStorage.getItem(`buzzr:host:${code}`);
+  return localStorage.getItem(`buzzr:host:${code}`) ?? sessionStorage.getItem(`buzzr:host:${code}`);
+}
+
+/** Open the clean audience display in a pop-out window (no host controls). */
+export function openDisplayWindow(code: string) {
+  window.open(`/board/${code}?display=1`, `buzzr-display-${code}`, 'popup=yes,width=1280,height=820');
 }
 
 export function rememberPlayerId(code: string, playerId: string) {
