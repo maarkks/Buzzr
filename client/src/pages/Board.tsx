@@ -64,8 +64,8 @@ function PresenterBar({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: Ho
   };
 
   return (
-    <div className="z-30 flex shrink-0 flex-wrap items-center gap-2 border-t border-ink/10 bg-white/80 px-3 py-2 backdrop-blur">
-      <span className="rounded bg-gold px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-ink">Host</span>
+    <div className="z-30 flex shrink-0 flex-wrap items-center gap-2 border-t border-ink/10 bg-stage-2/90 px-3 py-2 backdrop-blur">
+      <span className="rounded bg-gold px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-deep">Host</span>
 
       {snap.phase === 'lobby' && (
         <>
@@ -98,7 +98,7 @@ function PresenterBar({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: Ho
           {stage === 'reading' && (
             <button className="btn btn-gold anim-armed" onClick={() => conn.emit('host:arm')}>🔔 Arm buzzers</button>
           )}
-          {stage === 'armed' && <span className="font-black text-amber-600">Buzzers LIVE…</span>}
+          {stage === 'armed' && <span className="font-black text-gold">Buzzers LIVE…</span>}
           {(stage === 'buzzed' || stage === 'dd-answer') && (
             <>
               <button className="btn btn-green px-6" onClick={() => conn.emit('host:judge', true)}>✓ Correct</button>
@@ -123,7 +123,7 @@ function PresenterBar({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: Ho
                 {peek ? '🙈 Hide' : '👁 Peek'}
               </button>
             )}
-            {peek && stage !== 'resolved' && <span className="max-w-72 truncate text-sm font-bold text-amber-700">{answer}</span>}
+            {peek && stage !== 'resolved' && <span className="max-w-72 truncate text-sm font-bold text-gold">{answer}</span>}
           </span>
         </>
       )}
@@ -192,7 +192,7 @@ function FinalRevealControls({ secrets, conn }: { secrets: HostSecrets; conn: Ro
     <span className="flex flex-1 flex-wrap items-center gap-2">
       {judging ? (
         <>
-          <span className="text-sm text-ink/70">Judge <b className="text-amber-700">{judging.name}</b>:</span>
+          <span className="text-sm text-ink/70">Judge <b className="text-gold">{judging.name}</b>:</span>
           <button className="btn btn-green px-6" onClick={() => conn.emit('host:finalJudge', judging.entityId, true)}>✓</button>
           <button className="btn btn-red px-6" onClick={() => conn.emit('host:finalJudge', judging.entityId, false)}>✗</button>
         </>
@@ -212,13 +212,13 @@ function FinalRevealControls({ secrets, conn }: { secrets: HostSecrets; conn: Ro
 function QrCard({ url }: { url: string }) {
   const [src, setSrc] = useState<string | null>(null);
   useEffect(() => {
-    QRCode.toDataURL(url, { width: 480, margin: 1, color: { dark: '#3d3460', light: '#ffffff' } })
+    QRCode.toDataURL(url, { width: 480, margin: 1, color: { dark: '#090e1a', light: '#ffffff' } })
       .then(setSrc)
       .catch(() => setSrc(null));
   }, [url]);
   if (!src) return null;
   return (
-    <div className="rounded-2xl bg-white p-3 shadow-[0_8px_40px_rgba(120,100,200,.25)]">
+    <div className="rounded-2xl bg-white p-3 shadow-[0_0_50px_rgba(34,211,238,.18)]">
       <img src={src} alt={`QR code to join: ${url}`} className="h-44 w-44 md:h-52 md:w-52" />
     </div>
   );
@@ -235,11 +235,11 @@ function LobbyScreen({ snap }: { snap: RoomSnapshot }) {
         <div className="flex flex-col items-center">
           <div className="text-sm font-bold uppercase tracking-widest text-ink/50">Scan to join — or go to</div>
           <div className="text-xl text-ink/90">
-            {location.host}<span className="font-bold text-amber-600">/play</span>
+            {location.host}<span className="font-bold text-gold">/play</span>
           </div>
           <div className="money anim-marquee mt-2 text-7xl tracking-[.3em] md:text-8xl">{snap.code}</div>
           <div className="mt-2 text-sm text-ink/60">Your phone becomes your buzzer 🔔</div>
-          {snap.locked && <div className="mt-2 font-bold text-rose-500">🔒 Room locked</div>}
+          {snap.locked && <div className="mt-2 font-bold text-rose-400">🔒 Room locked</div>}
         </div>
       </div>
       {snap.settings.mode === 'teams' ? (
@@ -282,7 +282,7 @@ function BoardScreen({ snap, onSelect }: { snap: RoomSnapshot; onSelect?: (ci: n
       <div className="flex items-center justify-between px-1">
         <div className="text-sm font-bold uppercase tracking-widest text-ink/60">{snap.roundName}</div>
         <div className="text-sm text-ink/60">
-          Control: <b className="text-amber-600">{snap.controlName ?? '—'}</b>
+          Control: <b className="text-gold">{snap.controlName ?? '—'}</b>
         </div>
       </div>
       <div
@@ -341,7 +341,7 @@ function ClueScreen({ snap }: { snap: RoomSnapshot }) {
       <div className="flex items-center justify-between">
         <div className="text-lg font-black uppercase tracking-widest text-white/70">
           {clue.category} — <span className="money text-2xl">${clue.isDailyDouble ? (clue.wager ?? clue.value).toLocaleString() : clue.value}</span>
-          {clue.isDailyDouble && <span className="ml-3 rounded bg-gold px-2 py-0.5 text-sm font-bold text-ink">DAILY DOUBLE</span>}
+          {clue.isDailyDouble && <span className="ml-3 rounded bg-gold px-2 py-0.5 text-sm font-bold text-deep">DAILY DOUBLE</span>}
         </div>
         {snap.timer && <TimerRing timer={snap.timer} size={72} />}
       </div>
@@ -352,7 +352,7 @@ function ClueScreen({ snap }: { snap: RoomSnapshot }) {
           {clue.question || '—'}
         </div>
         {snap.revealedAnswer && (
-          <div className="anim-pop max-w-4xl rounded-xl bg-gold px-8 py-4 font-black text-ink [font-size:clamp(18px,2.6vw,40px)]">
+          <div className="anim-pop max-w-4xl rounded-xl bg-gold px-8 py-4 font-black text-deep [font-size:clamp(18px,2.6vw,40px)]">
             {snap.revealedAnswer}
           </div>
         )}
@@ -362,7 +362,7 @@ function ClueScreen({ snap }: { snap: RoomSnapshot }) {
       <div className="flex min-h-20 items-center justify-center">
         {stage === 'reading' && <div className="text-xl text-white/50">Get ready…</div>}
         {stage === 'armed' && (
-          <div className="anim-armed rounded-full bg-gold px-10 py-3 text-2xl font-black text-ink">BUZZ NOW!</div>
+          <div className="anim-armed rounded-full bg-gold px-10 py-3 text-2xl font-black text-deep">BUZZ NOW!</div>
         )}
         {stage === 'buzzed' && snap.buzzWinner && (
           <div className="anim-pop flex items-center gap-4 rounded-full bg-white/25 py-2 pl-2 pr-8">
@@ -430,7 +430,7 @@ function FinalScreen({ snap }: { snap: RoomSnapshot }) {
               </div>
               {r.judged && (
                 <div className="text-right">
-                  <div className={`text-2xl font-black ${r.judged === 'correct' ? 'text-emerald-400' : 'text-rose-500'}`}>
+                  <div className={`text-2xl font-black ${r.judged === 'correct' ? 'text-emerald-400' : 'text-rose-400'}`}>
                     {r.judged === 'correct' ? '✓' : '✗'} ${ (r.wager ?? 0).toLocaleString() }
                   </div>
                   <div className="money text-lg">{fmtScore(r.scoreAfter)}</div>
@@ -454,13 +454,13 @@ function PodiumScreen({ snap }: { snap: RoomSnapshot }) {
       {podium[0] && (
         <div className="anim-pop text-center">
           <div className="text-4xl">👑</div>
-          <div className="text-5xl font-black text-amber-600">{podium[0].name}</div>
+          <div className="text-5xl font-black text-gold">{podium[0].name}</div>
           <div className="money mt-1 text-4xl">{fmtScore(podium[0].score)}</div>
         </div>
       )}
       <div className="w-full max-w-xl space-y-2">
         {podium.map((p, i) => (
-          <div key={i} className="flex items-center gap-3 rounded-xl bg-white/70 px-5 py-3 shadow-sm" style={{ opacity: 1 - i * 0.08 }}>
+          <div key={i} className="flex items-center gap-3 rounded-xl bg-white/5 px-5 py-3" style={{ opacity: 1 - i * 0.08 }}>
             <span className="w-10 text-2xl">{medals[i] ?? `${i + 1}.`}</span>
             {p.avatar && <AvatarBubble avatar={p.avatar} size={36} />}
             {!p.avatar && p.color && <span className="h-5 w-5 rounded-full" style={{ background: p.color }} />}
@@ -482,7 +482,7 @@ function ScoreStrip({ snap }: { snap: RoomSnapshot }) {
           .slice(0, 8)
           .map((p) => ({ id: p.id, name: p.name, color: p.avatar.color, score: p.score, control: snap.controlId === p.id }));
   return (
-    <div className="flex shrink-0 items-stretch gap-1.5 border-t border-ink/10 bg-white/70 p-1.5">
+    <div className="flex shrink-0 items-stretch gap-1.5 border-t border-ink/10 bg-black/40 p-1.5">
       {entries.map((e) => (
         <div
           key={e.id}
@@ -490,10 +490,10 @@ function ScoreStrip({ snap }: { snap: RoomSnapshot }) {
           style={{ background: `linear-gradient(160deg, ${e.color}55, ${e.color}1c)`, boxShadow: `inset 0 -3px 0 ${e.color}` }}
         >
           <div className="w-full truncate text-center text-xs font-black uppercase tracking-wide text-ink/80">
-            {e.control && <span className="mr-1 text-amber-500">●</span>}
+            {e.control && <span className="mr-1 text-gold">●</span>}
             {e.name}
           </div>
-          <div className={`money [font-size:clamp(14px,2vw,28px)] ${e.score < 0 ? 'text-rose-500' : ''}`}>{fmtScore(e.score)}</div>
+          <div className={`money [font-size:clamp(14px,2vw,28px)] ${e.score < 0 ? 'text-rose-400' : ''}`}>{fmtScore(e.score)}</div>
         </div>
       ))}
       {entries.length === 0 && <div className="flex-1 py-2 text-center text-sm text-ink/40">No players</div>}

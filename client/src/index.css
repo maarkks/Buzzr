@@ -1,17 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* Pastel palette: light lavender canvas, dark plum ink, periwinkle stage */
-  --color-stage: #f4f2fc;
-  --color-stage-2: #ebe7f9;
-  --color-ink: #3d3460;
-  --color-cell: #93a0f4;
-  --color-cell-2: #7a86ee;
-  --color-grape: #c0a9f5;
-  --color-grape-2: #a288ec;
-  --color-gold: #ffd66e;
-  --color-gold-2: #ffe49a;
-  --color-coin: #9a6700;
+  /* Modern quiz palette: dark, clean, energetic accents.
+     `ink` is the text color; `deep` is dark text for on-accent chips. */
+  --color-stage: #090e1a;      /* app background */
+  --color-stage-2: #1e293b;    /* panels / sheets */
+  --color-panel: #131b2e;      /* cards */
+  --color-ink: #f9fafb;        /* text primary (muted via /NN) */
+  --color-deep: #0b1120;       /* text on gold/cyan/lime accents */
+  --color-cell: #1d2f66;       /* board tile top */
+  --color-cell-2: #15234e;     /* board tile bottom */
+  --color-grape: #8b5cf6;      /* secondary / category headers */
+  --color-grape-2: #6d28d9;
+  --color-gold: #fbbf24;       /* money / warning / timer */
+  --color-gold-2: #fcd34d;
+  --color-buzzer: #22d3ee;     /* phone buzzer */
+  --color-ok: #84cc16;         /* correct */
+  --color-coin: #fbbf24;
   --font-display: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
   --font-money: Impact, "Haettenschweiler", "Arial Narrow Bold", sans-serif;
 }
@@ -21,11 +26,11 @@ html, body, #root {
 }
 
 body {
+  /* Near-solid dark with a whisper of violet/cyan depth — clean, not busy. */
   background:
-    radial-gradient(900px 600px at 85% -5%, rgba(249, 168, 212, 0.4) 0%, transparent 60%),
-    radial-gradient(1000px 700px at -10% 20%, rgba(165, 180, 252, 0.45) 0%, transparent 55%),
-    radial-gradient(800px 700px at 50% 115%, rgba(153, 246, 228, 0.35) 0%, transparent 60%),
-    linear-gradient(180deg, #faf8ff 0%, var(--color-stage) 100%);
+    radial-gradient(1000px 600px at 80% -10%, rgba(139, 92, 246, 0.10) 0%, transparent 60%),
+    radial-gradient(900px 700px at -10% 110%, rgba(34, 211, 238, 0.06) 0%, transparent 55%),
+    var(--color-stage);
   background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-display);
@@ -33,9 +38,7 @@ body {
   overscroll-behavior: none;
 }
 
-/* ── Money styling ──────────────────────────────────────────────────────────
-   Deep amber on the light canvas; stage surfaces (board cells, clue screens,
-   score strip…) flip it to cream-gold via the CSS variables below. */
+/* ── Money styling ─────────────────────────────────────────────────────── */
 
 .money {
   font-family: var(--font-money);
@@ -44,38 +47,38 @@ body {
   text-shadow: var(--money-shadow, none);
 }
 
-/* Stage surfaces keep white text and flip money to cream-gold. */
+/* Stage surfaces (board tiles, clue screens) — brighter money with glow. */
 .on-stage, .board-cell, .cat-cell, .clue-stage {
   color: #fff;
-  --money-color: #fff3c9;
-  --money-shadow: 0 2px 0 rgba(40, 30, 90, .35), 0 0 22px rgba(255, 230, 150, .45);
+  --money-color: #fcd34d;
+  --money-shadow: 0 2px 0 rgba(0, 0, 0, .4), 0 0 20px rgba(251, 191, 36, .25);
 }
 
-/* ── Stage surfaces (pastel periwinkle, white text) ─────────────────────── */
+/* ── Stage surfaces ────────────────────────────────────────────────────── */
 
 .board-cell {
-  background: linear-gradient(160deg, var(--color-cell) 0%, var(--color-cell-2) 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.45), inset 0 0 0 1px rgba(255,255,255,.18), 0 4px 14px rgba(122, 110, 200, .35);
+  background: linear-gradient(170deg, var(--color-cell) 0%, var(--color-cell-2) 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
 }
 
 .board-cell-used {
-  background: linear-gradient(160deg, #e4e0f6 0%, #d9d4f0 100%);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+  background: #0d1526;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03);
 }
 
 .cat-cell {
-  background: linear-gradient(160deg, var(--color-grape) 0%, var(--color-grape-2) 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.5), inset 0 0 0 1px rgba(255,255,255,.18), 0 4px 14px rgba(140, 110, 220, .35);
+  background: linear-gradient(170deg, var(--color-grape) 0%, var(--color-grape-2) 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1);
 }
 
-/* Clue full-screen backdrop — pastel periwinkle with a soft spotlight */
+/* Clue full-screen backdrop — deep surface with a soft violet spotlight */
 .clue-stage {
   background:
-    radial-gradient(1000px 600px at 50% 0%, rgba(255,255,255,.28) 0%, transparent 55%),
-    linear-gradient(160deg, #9aa7f6 0%, #8478ee 100%);
+    radial-gradient(1000px 600px at 50% 0%, rgba(139, 92, 246, .22) 0%, transparent 55%),
+    linear-gradient(170deg, #1c2c5e 0%, #111b3a 100%);
 }
 
-/* ── Animations ─────────────────────────────────────────────────────────── */
+/* ── Animations ────────────────────────────────────────────────────────── */
 
 @keyframes pop-in {
   0% { transform: scale(.6); opacity: 0; }
@@ -99,10 +102,16 @@ body {
 .anim-flash { animation: flash-slide 3.2s ease both; }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 200, 90, .75), 0 8px 32px rgba(120, 100, 200, .35); }
-  50% { box-shadow: 0 0 0 26px rgba(255, 200, 90, 0), 0 8px 32px rgba(120, 100, 200, .35); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, .55); }
+  50% { box-shadow: 0 0 0 24px rgba(251, 191, 36, 0); }
 }
 .anim-armed { animation: pulse-glow 1.1s ease-out infinite; }
+
+@keyframes pulse-glow-cyan {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, .6); }
+  50% { box-shadow: 0 0 0 26px rgba(34, 211, 238, 0); }
+}
+.anim-buzzer { animation: pulse-glow-cyan 1.1s ease-out infinite; }
 
 @keyframes dd-spin {
   0% { transform: scale(.2) rotate(-18deg); opacity: 0; }
@@ -140,28 +149,28 @@ body {
 .anim-shake { animation: shake .45s ease both; }
 
 @keyframes marquee-glow {
-  0%, 100% { text-shadow: 0 0 16px rgba(255, 200, 90, .5); }
-  50% { text-shadow: 0 0 36px rgba(255, 190, 70, .9); }
+  0%, 100% { text-shadow: 0 0 14px rgba(251, 191, 36, .35); }
+  50% { text-shadow: 0 0 30px rgba(251, 191, 36, .7); }
 }
 .anim-marquee { animation: marquee-glow 2.2s ease-in-out infinite; }
 
 /* Timer ring uses a CSS custom property driven by JS */
 .timer-ring {
-  background: conic-gradient(#f59e0b calc(var(--frac) * 360deg), rgba(61, 52, 96, .15) 0deg);
+  background: conic-gradient(var(--color-gold) calc(var(--frac) * 360deg), rgba(249, 250, 251, .12) 0deg);
 }
 
 /* Inputs */
 .input {
-  @apply w-full rounded-lg border border-ink/15 bg-white px-3 py-2 text-sm text-ink outline-none placeholder:text-ink/35 focus:border-amber-400 focus:bg-amber-50/40 transition;
+  @apply w-full rounded-lg border border-ink/15 bg-white/5 px-3 py-2 text-sm text-ink outline-none placeholder:text-ink/35 focus:border-gold/70 focus:bg-white/10 transition;
 }
 
 /* Use as: class="btn btn-gold" etc. */
 .btn {
   @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition active:scale-95 disabled:opacity-40 disabled:pointer-events-none select-none;
 }
-.btn-gold { @apply bg-gold text-ink shadow-sm hover:bg-gold-2; }
-.btn-ghost { @apply border border-ink/15 bg-white/70 text-ink hover:bg-white; }
-.btn-green { @apply bg-emerald-300 text-emerald-950 hover:bg-emerald-200; }
-.btn-red { @apply bg-rose-300 text-rose-950 hover:bg-rose-200; }
+.btn-gold { @apply bg-gold text-deep hover:bg-gold-2; }
+.btn-ghost { @apply border border-ink/15 bg-white/5 text-ink hover:bg-white/10; }
+.btn-green { @apply bg-ok text-deep hover:brightness-110; }
+.btn-red { @apply bg-rose-500 text-white hover:bg-rose-400; }
 
-.card { @apply rounded-2xl border border-ink/10 bg-white/70 shadow-[0_8px_30px_rgba(120,100,200,.12)] backdrop-blur; }
+.card { @apply rounded-2xl border border-ink/10 bg-panel/80 backdrop-blur; }

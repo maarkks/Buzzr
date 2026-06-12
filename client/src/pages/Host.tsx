@@ -42,7 +42,7 @@ function TopBar({ snap, conn }: { snap: RoomSnapshot; conn: RoomConn }) {
   return (
     <div className="card mb-4 flex flex-wrap items-center gap-3 p-3">
       <HomeLink />
-      <span className="money on-stage rounded-lg bg-ink px-4 py-1 text-3xl tracking-[.25em]">{snap.code}</span>
+      <span className="money on-stage rounded-lg bg-white/10 px-4 py-1 text-3xl tracking-[.25em]">{snap.code}</span>
       <span className="hidden text-sm text-ink/50 md:block">{snap.gameTitle}</span>
       <div className="ml-auto flex flex-wrap items-center gap-2">
         <button className="btn btn-ghost" onClick={() => copy('join', joinUrl)}>
@@ -102,7 +102,7 @@ function LobbyPanel({ snap, conn }: { snap: RoomSnapshot; conn: RoomConn }) {
     <div className="card p-6">
       <h2 className="mb-2 text-2xl font-black">Lobby</h2>
       <p className="mb-4 text-ink/60">
-        Players join at <span className="font-bold text-amber-600">{joinUrl.replace(/^https?:\/\//, '')}</span> — they appear in the
+        Players join at <span className="font-bold text-gold">{joinUrl.replace(/^https?:\/\//, '')}</span> — they appear in the
         roster as they arrive. Open the board view on the big screen so everyone can see the code.
       </p>
       <ul className="mb-6 list-inside list-disc space-y-1 text-sm text-ink/50">
@@ -124,7 +124,7 @@ function BoardPanel({ snap, conn }: { snap: RoomSnapshot; conn: RoomConn }) {
       <div className="mb-3 flex flex-wrap items-center gap-3">
         <h2 className="text-xl font-black">{snap.roundName}</h2>
         <span className="text-sm text-ink/50">
-          Control: <b className="text-amber-600">{snap.controlName ?? '—'}</b>
+          Control: <b className="text-gold">{snap.controlName ?? '—'}</b>
         </span>
         <div className="ml-auto flex gap-2">
           {snap.roundIndex + 1 < snap.roundCount && (
@@ -184,8 +184,8 @@ function CluePanel({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: HostS
 
       <p className="mb-2 text-xl font-bold leading-snug">{clue.question || <i className="text-ink/50">— empty clue —</i>}</p>
       {clue.image && <img src={clue.image} alt="" className="mb-3 max-h-44 rounded-lg" />}
-      <div className="mb-5 rounded-lg border border-amber-300 bg-amber-100/70 px-4 py-2">
-        <span className="mr-2 text-xs font-black uppercase text-amber-600">Answer</span>
+      <div className="mb-5 rounded-lg border border-gold/50 bg-gold/10 px-4 py-2">
+        <span className="mr-2 text-xs font-black uppercase text-gold">Answer</span>
         <span className="font-bold">{secrets.answer || <i className="text-ink/50">—</i>}</span>
       </div>
 
@@ -202,14 +202,14 @@ function CluePanel({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: HostS
 
       {stage === 'armed' && (
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-lg font-bold text-amber-600">Buzzers are LIVE…</span>
+          <span className="text-lg font-bold text-gold">Buzzers are LIVE…</span>
           <button className="btn btn-ghost" onClick={() => conn.emit('host:reveal')}>No takers — reveal</button>
         </div>
       )}
 
       {stage === 'buzzed' && snap.buzzWinner && (
         <div>
-          <div className="anim-pop mb-4 flex items-center gap-3 rounded-xl border border-amber-300 bg-amber-100/70 p-4">
+          <div className="anim-pop mb-4 flex items-center gap-3 rounded-xl border border-gold/50 bg-gold/10 p-4">
             <AvatarBubble avatar={snap.buzzWinner.avatar} size={48} />
             <div>
               <div className="text-xl font-black">{snap.buzzWinner.name}</div>
@@ -232,10 +232,10 @@ function CluePanel({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: HostS
       {stage === 'wager' && (
         <div>
           <p className="mb-3 font-bold">
-            Waiting for <span className="text-amber-600">{clue.ddOwnerName ?? 'someone'}</span> to wager from their phone…
+            Waiting for <span className="text-gold">{clue.ddOwnerName ?? 'someone'}</span> to wager from their phone…
           </p>
           {!clue.ddOwnerId && (
-            <p className="mb-3 text-sm text-amber-600">No one has control — pick who wagers using “Give control” in the roster.</p>
+            <p className="mb-3 text-sm text-gold">No one has control — pick who wagers using “Give control” in the roster.</p>
           )}
           <div className="flex items-center gap-2">
             <input
@@ -256,7 +256,7 @@ function CluePanel({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: HostS
       {stage === 'dd-answer' && (
         <div>
           <p className="mb-4 text-lg">
-            <span className="font-black text-amber-600">{clue.ddOwnerName}</span> wagered{' '}
+            <span className="font-black text-gold">{clue.ddOwnerName}</span> wagered{' '}
             <span className="money text-2xl">${clue.wager?.toLocaleString()}</span> — they answer out loud.
           </p>
           <div className="flex flex-wrap gap-3">
@@ -281,11 +281,11 @@ function FinalPanel({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: Host
     <div className="card p-6">
       <h2 className="mb-1 text-2xl font-black">Final Round</h2>
       <div className="mb-4 text-ink/60">
-        Category: <b className="text-amber-600 uppercase">{f.category || '—'}</b>
+        Category: <b className="text-gold uppercase">{f.category || '—'}</b>
       </div>
-      <div className="mb-5 rounded-lg border border-amber-300 bg-amber-100/70 px-4 py-2">
-        <span className="mr-2 text-xs font-black uppercase text-amber-600">Clue & answer</span>
-        <div className="font-bold">{secrets.finalAnswer ? <>{f.question ?? '(clue hidden from players until you show it)'} — <span className="text-amber-600">{secrets.finalAnswer}</span></> : '—'}</div>
+      <div className="mb-5 rounded-lg border border-gold/50 bg-gold/10 px-4 py-2">
+        <span className="mr-2 text-xs font-black uppercase text-gold">Clue & answer</span>
+        <div className="font-bold">{secrets.finalAnswer ? <>{f.question ?? '(clue hidden from players until you show it)'} — <span className="text-gold">{secrets.finalAnswer}</span></> : '—'}</div>
       </div>
 
       {snap.phase === 'final-wager' && (
@@ -320,7 +320,7 @@ function FinalPanel({ snap, secrets, conn }: { snap: RoomSnapshot; secrets: Host
                   <span className="flex-1 italic text-ink/80">“{e.answer || '(no answer)'}”</span>
                   <span className="money">${(e.wager ?? 0).toLocaleString()}</span>
                   {e.judged ? (
-                    <span className={`font-black ${e.judged === 'correct' ? 'text-emerald-600' : 'text-rose-500'}`}>
+                    <span className={`font-black ${e.judged === 'correct' ? 'text-emerald-400' : 'text-rose-400'}`}>
                       {e.judged === 'correct' ? '✓' : '✗'}
                     </span>
                   ) : (
@@ -411,7 +411,7 @@ function TeamCard({ snap, conn, team }: { snap: RoomSnapshot; conn: RoomConn; te
           onBlur={(e) => e.target.value !== team.name && conn.emit('host:renameTeam', team.id, e.target.value)}
           className="w-28 flex-1 rounded bg-transparent px-1 font-black outline-none focus:bg-ink/10"
         />
-        {isControl && <span title="Has control" className="text-amber-600">●</span>}
+        {isControl && <span title="Has control" className="text-gold">●</span>}
         <span className="money text-xl">{fmtScore(team.score)}</span>
       </div>
       <ScoreAdjust conn={conn} entityId={team.id} />
@@ -422,7 +422,7 @@ function TeamCard({ snap, conn, team }: { snap: RoomSnapshot; conn: RoomConn; te
         {members.length === 0 && <div className="text-xs text-ink/40">No players yet</div>}
       </div>
       {!isControl && (
-        <button className="mt-2 text-xs text-ink/50 hover:text-amber-600" onClick={() => conn.emit('host:setControl', team.id)}>
+        <button className="mt-2 text-xs text-ink/50 hover:text-gold" onClick={() => conn.emit('host:setControl', team.id)}>
           Give control
         </button>
       )}
@@ -450,7 +450,7 @@ function PlayerRow({ snap, conn, p, showScore }: { snap: RoomSnapshot; conn: Roo
     <div className={`flex items-center gap-2 rounded-lg px-1 py-0.5 text-sm ${p.connected ? '' : 'opacity-40'}`}>
       <AvatarBubble avatar={p.avatar} size={24} />
       <span className="flex-1 truncate font-bold">{p.name}</span>
-      {isControl && <span title="Has control" className="text-amber-600">●</span>}
+      {isControl && <span title="Has control" className="text-gold">●</span>}
       {p.locked && <span title="Locked out of this clue">🚫</span>}
       {!p.connected && <span title="Disconnected">📴</span>}
       {showScore && <span className="money">{fmtScore(p.score)}</span>}
@@ -469,12 +469,12 @@ function PlayerRow({ snap, conn, p, showScore }: { snap: RoomSnapshot; conn: Roo
         </select>
       )}
       {!isTeams && !isControl && (
-        <button className="text-xs text-ink/40 hover:text-amber-600" title="Give control" onClick={() => conn.emit('host:setControl', p.id)}>
+        <button className="text-xs text-ink/40 hover:text-gold" title="Give control" onClick={() => conn.emit('host:setControl', p.id)}>
           ●
         </button>
       )}
       <button
-        className="text-xs text-ink/40 hover:text-rose-500"
+        className="text-xs text-ink/40 hover:text-rose-400"
         title="Kick player"
         onClick={() => confirm(`Kick ${p.name}?`) && conn.emit('host:kick', p.id)}
       >

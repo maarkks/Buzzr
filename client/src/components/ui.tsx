@@ -7,7 +7,7 @@ export function Logo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const cls = size === 'lg' ? 'text-7xl md:text-8xl' : size === 'sm' ? 'text-2xl' : 'text-4xl';
   return (
     <span
-      className={`anim-marquee font-black tracking-wide text-amber-500 ${cls}`}
+      className={`anim-marquee font-black tracking-wide text-gold ${cls}`}
       style={{ fontFamily: 'var(--font-money)' }}
     >
       BUZZR
@@ -43,7 +43,7 @@ export function TimerRing({ timer, size = 72 }: { timer: { endsAt: number; total
       style={{ width: size, height: size, ['--frac' as never]: String(t.frac) }}
     >
       <div
-        className="grid place-items-center rounded-full bg-white font-black text-ink"
+        className="grid place-items-center rounded-full bg-stage-2 font-black text-ink"
         style={{ width: size - 12, height: size - 12, fontSize: size * 0.34 }}
       >
         {t.secondsLeft}
@@ -53,11 +53,11 @@ export function TimerRing({ timer, size = 72 }: { timer: { endsAt: number; total
 }
 
 const FLASH_STYLES: Record<EventFlash['type'], string> = {
-  correct: 'bg-emerald-200 text-emerald-950',
-  wrong: 'bg-rose-200 text-rose-950',
-  timeout: 'bg-amber-200 text-amber-950',
-  info: 'bg-indigo-200 text-indigo-950',
-  'daily-double': 'bg-gold text-ink',
+  correct: 'bg-ok text-deep',
+  wrong: 'bg-rose-500 text-white',
+  timeout: 'bg-gold text-deep',
+  info: 'bg-grape text-white',
+  'daily-double': 'bg-gold text-deep',
 };
 
 export function FlashBanner({ flash }: { flash: EventFlash | null }) {
@@ -71,7 +71,7 @@ export function FlashBanner({ flash }: { flash: EventFlash | null }) {
   );
 }
 
-const CONFETTI_COLORS = ['#fcd34d', '#f9a8d4', '#93c5fd', '#6ee7b7', '#c4b5fd', '#fdba74'];
+const CONFETTI_COLORS = ['#fbbf24', '#22d3ee', '#8b5cf6', '#84cc16', '#f43f5e', '#f9fafb'];
 
 export function Confetti({ count = 90 }: { count?: number }) {
   const pieces = useMemo(
@@ -123,7 +123,7 @@ export function Spinner({ label }: { label?: string }) {
   return (
     <div className="grid min-h-screen place-items-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-amber-400 border-t-transparent" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gold border-t-transparent" />
         {label && <div className="text-ink/60">{label}</div>}
       </div>
     </div>

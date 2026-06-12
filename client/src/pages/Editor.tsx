@@ -167,7 +167,7 @@ export default function Editor() {
         )}
         {!readonly && game.rounds.length > 1 && tab === 1 && (
           <button
-            className="btn btn-ghost text-rose-500"
+            className="btn btn-ghost text-rose-400"
             onClick={() => {
               if (confirm('Remove the second round?')) {
                 update((g) => void g.rounds.splice(1, 1));
@@ -217,10 +217,10 @@ export default function Editor() {
 
 function SaveBadge({ state }: { state: string }) {
   const map: Record<string, [string, string]> = {
-    saved: ['Saved', 'text-emerald-600'],
+    saved: ['Saved', 'text-emerald-400'],
     saving: ['Saving…', 'text-ink/50'],
-    dirty: ['Unsaved…', 'text-amber-600'],
-    error: ['Save failed!', 'text-rose-500'],
+    dirty: ['Unsaved…', 'text-gold'],
+    error: ['Save failed!', 'text-rose-400'],
     readonly: ['Read-only', 'text-ink/50'],
   };
   const [label, cls] = map[state] ?? ['', ''];
@@ -414,7 +414,7 @@ function ClueModal({
   };
 
   return (
-    <div className="fixed inset-0 z-40 grid place-items-center bg-ink/50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-40 grid place-items-center bg-black/70 p-4" onClick={onClose}>
       <div className="card anim-pop w-full max-w-xl p-6" onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-center justify-between">
           <div className="font-black uppercase tracking-wide text-ink/70">
@@ -460,7 +460,7 @@ function ClueModal({
             checked={!!clue.dailyDouble}
             disabled={readonly}
             onChange={(e) => set((c) => (c.dailyDouble = e.target.checked || undefined))}
-            className="h-5 w-5 accent-[#f59e0b]"
+            className="h-5 w-5 accent-[#fbbf24]"
           />
           <span className="font-bold">💰 Daily Double</span>
           <span className="text-xs text-ink/50">— the team in control wagers before seeing the clue</span>
@@ -526,7 +526,7 @@ function FinalEditor({
       />
       {!readonly && (
         <button
-          className="btn btn-ghost text-rose-500"
+          className="btn btn-ghost text-rose-400"
           onClick={() => confirm('Remove the Final round?') && update((g) => (g.final = null))}
         >
           Remove Final round

@@ -107,7 +107,7 @@ function JoinCodeForm({ onSubmit }: { onSubmit: (code: string) => void }) {
           style={{ fontFamily: 'var(--font-money)' }}
           autoFocus
         />
-        {error && <div className="mb-3 text-center text-sm text-rose-500">{error}</div>}
+        {error && <div className="mb-3 text-center text-sm text-rose-400">{error}</div>}
         <button className="btn btn-gold w-full py-3 text-lg" disabled={code.length !== 4}>Join game</button>
       </form>
     </div>
@@ -148,7 +148,7 @@ function ProfileForm({
             <button
               key={e}
               onClick={() => onChange({ ...profile, avatar: { ...profile.avatar, emoji: e } })}
-              className={`grid aspect-square cursor-pointer place-items-center rounded-lg text-xl transition ${profile.avatar.emoji === e ? 'bg-amber-200 ring-2 ring-amber-400' : 'bg-ink/5 hover:bg-ink/10'}`}
+              className={`grid aspect-square cursor-pointer place-items-center rounded-lg text-xl transition ${profile.avatar.emoji === e ? 'bg-gold/30 ring-2 ring-gold' : 'bg-ink/5 hover:bg-ink/10'}`}
             >
               {e}
             </button>
@@ -207,9 +207,9 @@ function PhoneGame({
       style={{
         background:
           me.judgeFlash === 'correct'
-            ? 'radial-gradient(circle at 50% 30%, rgba(110,231,183,.55), transparent 70%)'
+            ? 'radial-gradient(circle at 50% 30%, rgba(132,204,22,.3), transparent 70%)'
             : me.judgeFlash === 'wrong'
-              ? 'radial-gradient(circle at 50% 30%, rgba(253,164,175,.6), transparent 70%)'
+              ? 'radial-gradient(circle at 50% 30%, rgba(244,63,94,.35), transparent 70%)'
               : undefined,
       }}
     >
@@ -220,14 +220,14 @@ function PhoneGame({
           <div className="truncate text-sm font-black">{profile.name}</div>
           {myTeam && (
             <div
-              className="inline-block max-w-full truncate rounded-full px-2 text-xs font-bold text-ink/80"
-              style={{ background: `${myTeam.color}66` }}
+              className="inline-block max-w-full truncate rounded-full px-2 text-xs font-bold text-deep"
+              style={{ background: myTeam.color }}
             >
               {myTeam.name}
             </div>
           )}
         </div>
-        <div className={`money text-2xl ${myScore < 0 ? 'text-rose-500' : ''}`}>{fmtScore(myScore)}</div>
+        <div className={`money text-2xl ${myScore < 0 ? 'text-rose-400' : ''}`}>{fmtScore(myScore)}</div>
         <button className="btn btn-ghost px-3" onClick={() => setShowBoard(true)} title="Leaderboard">🏆</button>
       </div>
 
@@ -261,8 +261,8 @@ function MainArea({ snap, me, conn, myTeamColor }: { snap: RoomSnapshot; me: MeS
                   <button
                     key={t.id}
                     onClick={() => conn.emit('player:joinTeam', t.id)}
-                    className={`btn cursor-pointer ${mine ? 'ring-2 ring-ink/60' : ''}`}
-                    style={{ background: `${t.color}${mine ? 'ff' : '66'}`, color: '#2c2650' }}
+                    className={`btn cursor-pointer ${mine ? 'ring-2 ring-white' : ''}`}
+                    style={mine ? { background: t.color, color: '#0b1120' } : { background: `${t.color}2e`, color: '#f9fafb' }}
                   >
                     {t.name} ({count})
                   </button>
@@ -281,7 +281,7 @@ function MainArea({ snap, me, conn, myTeamColor }: { snap: RoomSnapshot; me: MeS
         <div className="mb-2 text-5xl">👀</div>
         <div className="text-xl font-black">Eyes on the board!</div>
         <div className="mt-1 text-ink/60">
-          {snap.controlName ? <><b className="text-amber-600">{snap.controlName}</b> picks the next clue</> : 'The host is picking a clue'}
+          {snap.controlName ? <><b className="text-gold">{snap.controlName}</b> picks the next clue</> : 'The host is picking a clue'}
         </div>
       </Center>
     );
@@ -296,7 +296,7 @@ function MainArea({ snap, me, conn, myTeamColor }: { snap: RoomSnapshot; me: MeS
       return (
         <Center>
           <div className="mb-2 text-5xl">💰</div>
-          <div className="text-xl font-black text-amber-600">DAILY DOUBLE!</div>
+          <div className="text-xl font-black text-gold">DAILY DOUBLE!</div>
           <div className="mt-1 text-ink/60"><b>{clue.ddOwnerName ?? 'Someone'}</b> is wagering…</div>
         </Center>
       );
@@ -374,7 +374,7 @@ function BuzzerSurface({ snap, me, conn, myTeamColor }: { snap: RoomSnapshot; me
           {clue.category} · <span className="money text-base">${clue.value}</span>
         </div>
         <div className="mt-1 line-clamp-3 text-sm font-bold leading-snug">{clue.question}</div>
-        {snap.revealedAnswer && <div className="mt-2 rounded bg-amber-100 px-2 py-1 text-sm font-black text-amber-600">{snap.revealedAnswer}</div>}
+        {snap.revealedAnswer && <div className="mt-2 rounded bg-gold/15 px-2 py-1 text-sm font-black text-gold">{snap.revealedAnswer}</div>}
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
@@ -391,9 +391,9 @@ function BuzzerSurface({ snap, me, conn, myTeamColor }: { snap: RoomSnapshot; me
               }}
               className={`grid aspect-square w-[min(62vw,260px)] cursor-pointer select-none place-items-center rounded-full text-3xl font-black transition active:scale-95 ${
                 armed
-                  ? 'anim-armed bg-gradient-to-b from-rose-300 to-rose-400 text-rose-950'
+                  ? 'anim-buzzer bg-gradient-to-b from-cyan-300 to-cyan-500 text-deep'
                   : me.hasFloor
-                    ? 'bg-gradient-to-b from-emerald-200 to-emerald-400 text-emerald-950'
+                    ? 'bg-gradient-to-b from-lime-300 to-lime-500 text-deep'
                     : 'bg-ink/10 text-ink/50'
               }`}
               style={me.hasFloor && myTeamColor ? { boxShadow: `0 0 60px ${myTeamColor}` } : undefined}
@@ -420,7 +420,7 @@ function WagerPad({ me, conn, title, allowZero }: { me: MeState; conn: RoomConn;
   const submitted = me.wagerSubmitted;
   return (
     <Center>
-      <div className="mb-1 text-xs font-bold uppercase tracking-widest text-amber-600">{title}</div>
+      <div className="mb-1 text-xs font-bold uppercase tracking-widest text-gold">{title}</div>
       <div className="money mb-4 text-6xl">${value.toLocaleString()}</div>
       <input
         type="range"
@@ -429,7 +429,7 @@ function WagerPad({ me, conn, title, allowZero }: { me: MeState; conn: RoomConn;
         step={Math.max(1, Math.min(100, Math.round(max / 100) || 1))}
         value={value}
         onChange={(e) => setValue(Number(e.target.value))}
-        className="mb-4 w-full accent-[#f59e0b]"
+        className="mb-4 w-full accent-[#fbbf24]"
       />
       <div className="mb-5 flex flex-wrap justify-center gap-2">
         <button className="btn btn-ghost" onClick={() => setValue(min)}>Min</button>
@@ -445,7 +445,7 @@ function WagerPad({ me, conn, title, allowZero }: { me: MeState; conn: RoomConn;
       >
         {submitted !== null ? `Update wager (now $${submitted.toLocaleString()})` : 'Lock it in'}
       </button>
-      {submitted !== null && <div className="mt-2 text-sm text-emerald-600">✓ Wager submitted</div>}
+      {submitted !== null && <div className="mt-2 text-sm text-emerald-400">✓ Wager submitted</div>}
     </Center>
   );
 }
@@ -456,7 +456,7 @@ function FinalAnswerPad({ snap, me, conn }: { snap: RoomSnapshot; me: MeState; c
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <div className="rounded-xl bg-ink/5 p-3 text-center">
-        <div className="text-xs font-bold uppercase tracking-widest text-amber-600">{snap.final?.category}</div>
+        <div className="text-xs font-bold uppercase tracking-widest text-gold">{snap.final?.category}</div>
         <div className="mt-1 text-sm font-bold leading-snug">{snap.final?.question}</div>
       </div>
       <div className="flex items-center justify-center">{snap.timer && <TimerRing timer={snap.timer} size={64} />}</div>
@@ -480,7 +480,7 @@ function FinalAnswerPad({ snap, me, conn }: { snap: RoomSnapshot; me: MeState; c
           >
             {submitted ? 'Update answer' : 'Submit answer'}
           </button>
-          {submitted && <div className="text-center text-sm text-emerald-600">✓ Submitted: “{submitted}”</div>}
+          {submitted && <div className="text-center text-sm text-emerald-400">✓ Submitted: “{submitted}”</div>}
         </>
       ) : (
         <Center>
@@ -500,10 +500,10 @@ function FinalStandings({ snap, me }: { snap: RoomSnapshot; me: MeState }) {
     <Center>
       <div className="mb-2 text-5xl">{myRank === 0 ? '👑' : '🏁'}</div>
       <div className="mb-1 text-2xl font-black">{myRank === 0 ? 'CHAMPIONS!' : "That's the game!"}</div>
-      {myRank >= 0 && <div className="mb-4 text-ink/60">You finished <b className="text-amber-600">#{myRank + 1}</b></div>}
+      {myRank >= 0 && <div className="mb-4 text-ink/60">You finished <b className="text-gold">#{myRank + 1}</b></div>}
       <div className="w-full max-w-xs space-y-1.5">
         {podium.slice(0, 5).map((p, i) => (
-          <div key={i} className={`flex items-center gap-2 rounded-lg px-3 py-1.5 ${p.name === myName ? 'bg-amber-100 ring-1 ring-amber-400' : 'bg-ink/5'}`}>
+          <div key={i} className={`flex items-center gap-2 rounded-lg px-3 py-1.5 ${p.name === myName ? 'bg-gold/15 ring-1 ring-gold' : 'bg-ink/5'}`}>
             <span className="w-6 font-black">{i + 1}</span>
             <span className="flex-1 truncate text-left font-bold">{p.name}</span>
             <span className="money">{fmtScore(p.score)}</span>
@@ -544,7 +544,7 @@ function LeaderboardSheet({
               <span className="w-6 font-black text-ink/50">{i + 1}</span>
               {r.avatar ? <AvatarBubble avatar={r.avatar} size={28} /> : <span className="h-4 w-4 rounded-full" style={{ background: r.color }} />}
               <span className="flex-1 truncate font-bold">{r.name}</span>
-              <span className={`money ${r.score < 0 ? 'text-rose-500' : ''}`}>{fmtScore(r.score)}</span>
+              <span className={`money ${r.score < 0 ? 'text-rose-400' : ''}`}>{fmtScore(r.score)}</span>
             </div>
           ))}
         </div>
@@ -553,7 +553,7 @@ function LeaderboardSheet({
             <div className="mb-1 text-xs font-bold uppercase text-ink/50">Players</div>
             <div className="flex flex-wrap gap-1.5">
               {snap.players.map((p) => (
-                <span key={p.id} className={`inline-flex items-center gap-1 rounded-full bg-ink/10 py-0.5 pl-0.5 pr-2 text-xs ${p.id === me.playerId ? 'ring-1 ring-amber-400' : ''}`}>
+                <span key={p.id} className={`inline-flex items-center gap-1 rounded-full bg-ink/10 py-0.5 pl-0.5 pr-2 text-xs ${p.id === me.playerId ? 'ring-1 ring-gold' : ''}`}>
                   <AvatarBubble avatar={p.avatar} size={18} />
                   {p.name}
                 </span>
@@ -569,7 +569,7 @@ function LeaderboardSheet({
               <button
                 key={e}
                 onClick={() => onProfile({ ...profile, avatar: { ...profile.avatar, emoji: e } })}
-                className={`grid h-8 w-8 place-items-center rounded-lg ${profile.avatar.emoji === e ? 'bg-amber-200 ring-1 ring-amber-400' : 'bg-ink/5'}`}
+                className={`grid h-8 w-8 place-items-center rounded-lg ${profile.avatar.emoji === e ? 'bg-gold/30 ring-1 ring-gold' : 'bg-ink/5'}`}
               >
                 {e}
               </button>

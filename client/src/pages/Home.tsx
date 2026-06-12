@@ -67,21 +67,21 @@ export default function Home() {
             Join
           </button>
         </div>
-        {joinError && <div className="mt-3 text-center text-sm text-rose-500">{joinError}</div>}
+        {joinError && <div className="mt-3 text-center text-sm text-rose-400">{joinError}</div>}
       </form>
 
       {/* Create / browse */}
       <div className="grid w-full max-w-3xl gap-5 md:grid-cols-2">
-        <button onClick={createGame} disabled={busy} className="card group cursor-pointer p-7 text-left transition hover:border-amber-300 hover:bg-ink/10">
+        <button onClick={createGame} disabled={busy} className="card group cursor-pointer p-7 text-left transition hover:border-gold/50 hover:bg-ink/10">
           <div className="mb-2 text-3xl">🛠️</div>
-          <div className="mb-1 text-xl font-black group-hover:text-amber-600">Create a game</div>
+          <div className="mb-1 text-xl font-black group-hover:text-gold">Create a game</div>
           <div className="text-sm text-ink/60">
             No account needed. Categories, point values, Daily Doubles, a Final round — yours in minutes.
           </div>
         </button>
-        <Link to="/browse" className="card group p-7 transition hover:border-amber-300 hover:bg-ink/10">
+        <Link to="/browse" className="card group p-7 transition hover:border-gold/50 hover:bg-ink/10">
           <div className="mb-2 text-3xl">📚</div>
-          <div className="mb-1 text-xl font-black group-hover:text-amber-600">Browse games</div>
+          <div className="mb-1 text-xl font-black group-hover:text-gold">Browse games</div>
           <div className="text-sm text-ink/60">
             Host a ready-made board, or clone one and make it your own.
           </div>
@@ -90,9 +90,9 @@ export default function Home() {
 
       {/* How it works */}
       <div className="mt-16 grid w-full max-w-3xl gap-4 text-center text-sm text-ink/50 md:grid-cols-3">
-        <div><span className="font-black text-amber-600">1.</span> Build or pick a board</div>
-        <div><span className="font-black text-amber-600">2.</span> Put it on the big screen — players scan the QR</div>
-        <div><span className="font-black text-amber-600">3.</span> Phones become buzzers — scores keep themselves</div>
+        <div><span className="font-black text-gold">1.</span> Build or pick a board</div>
+        <div><span className="font-black text-gold">2.</span> Put it on the big screen — players scan the QR</div>
+        <div><span className="font-black text-gold">3.</span> Phones become buzzers — scores keep themselves</div>
       </div>
 
       <div className="mt-auto pt-16 text-xs text-ink/40">

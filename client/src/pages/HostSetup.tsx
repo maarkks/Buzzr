@@ -50,7 +50,7 @@ export default function HostSetup() {
         <div className="mb-6 grid grid-cols-2 gap-3">
           <button
             onClick={() => set('mode', 'teams')}
-            className={`card cursor-pointer p-4 text-left transition ${settings.mode === 'teams' ? 'border-amber-400 bg-amber-100/70' : 'hover:bg-ink/10'}`}
+            className={`card cursor-pointer p-4 text-left transition ${settings.mode === 'teams' ? 'border-gold bg-gold/10' : 'hover:bg-ink/10'}`}
           >
             <div className="text-2xl">👥</div>
             <div className="font-black">Teams</div>
@@ -58,7 +58,7 @@ export default function HostSetup() {
           </button>
           <button
             onClick={() => set('mode', 'ffa')}
-            className={`card cursor-pointer p-4 text-left transition ${settings.mode === 'ffa' ? 'border-amber-400 bg-amber-100/70' : 'hover:bg-ink/10'}`}
+            className={`card cursor-pointer p-4 text-left transition ${settings.mode === 'ffa' ? 'border-gold bg-gold/10' : 'hover:bg-ink/10'}`}
           >
             <div className="text-2xl">⚡</div>
             <div className="font-black">Free-for-all</div>
@@ -119,7 +119,7 @@ function ToggleRow({ label, hint, checked, onChange }: { label: string; hint: st
         <span className="block text-sm font-bold">{label}</span>
         <span className="block text-xs text-ink/50">{hint}</span>
       </span>
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="h-6 w-6 accent-[#f59e0b]" />
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="h-6 w-6 accent-[#fbbf24]" />
     </label>
   );
 }
