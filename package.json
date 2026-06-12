@@ -1,0 +1,17 @@
+{
+  "name": "buzzr",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Buzzr — real-time Jeopardy-style game show platform with phone buzzers",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @buzzr/server & npm run dev -w @buzzr/client & wait",
+    "build": "npm run build -w @buzzr/client",
+    "start": "npm run start -w @buzzr/server",
+    "typecheck": "npm run typecheck -ws --if-present"
+  }
+}
